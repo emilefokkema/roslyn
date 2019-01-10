@@ -259,7 +259,7 @@ function Restore-OptProfData() {
 
     $dropServiceUrl = "https://devdiv.artifacts.visualstudio.com"
     $dropNamePrefix = "OptimizationData/dotnet/roslyn/master-vs-deps"
-    $patAuth = if ($officialBuildId) { "--patAuthEnv System.AccessToken" } else { "" }
+    $patAuth = if ($officialBuildId) { "--patAuth `"$vsDropAccessToken`"" } else { "" }
 
     $dropsJsonPath = Join-Path $IbcOptimizationDataDir "AvailableDrops.json"
     $logFile = Join-Path $LogDir "OptimizationDataAcquisition.log"
