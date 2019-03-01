@@ -102,5 +102,45 @@ namespace Microsoft.CodeAnalysis.CSharp.UsePatternMatching
             {
             }
         }
+
+        public class FirstRemover<T> where T:class
+        {
+            private readonly Func<T, T> getNext;
+            private readonly Func<T, bool> isFirst;
+            private readonly Collection<T> removed;
+            public ICollection<T> Firsts { get; }
+
+            public FirstRemover(Func<T,T> getNext, Func<T,bool> isFirst)
+            {
+                this.getNext = getNext;
+                this.isFirst = isFirst;
+                removed = new Collection<T>();
+                Firsts = new Collection<T>();
+            }
+
+            private void MakeNextFirst(T item)
+            {
+                var next = item;
+                do
+                {
+                    next = getNext(next);
+                } while (removed.Contains(next));
+
+                if (next != null)
+                {
+                    Firsts.Add(next);
+                }
+            }
+
+            public void Remove(T item)
+            {
+                if (isFirst(item) || Firsts.Remove(item))
+                {
+                    MakeNextFirst(item);
+                }
+
+                removed.Add(item);
+            }
+        }
     }
 }
